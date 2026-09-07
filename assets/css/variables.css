@@ -1,0 +1,112 @@
+/* LINAKAN Design System - CSS Variables */
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap");
+
+:root {
+  color-scheme: light;
+
+  /* Primary Brand Colors */
+  --color-primary: #00452d;
+  --color-primary-dark: #003321;
+  --color-primary-light: #1f5d42;
+  --color-primary-lighter: #95d4b1;
+  --color-primary-lightest: #b1f0cd;
+  --color-primary-fixed: #b1f0cd;
+
+  /* Secondary Colors */
+  --color-secondary: #396845;
+  --color-secondary-light: #3d6d49;
+  --color-secondary-fixed: #baefc2;
+
+  /* Tertiary Colors (Accent) */
+  --color-tertiary: #503700;
+  --color-tertiary-light: #6e4c00;
+  --color-tertiary-fixed: #ffdeaa;
+
+  /* Neutral Colors */
+  --color-white: #ffffff;
+  --color-off-white: #fafaf5;
+  --color-canvas: #f6f5ed;
+  --color-surface: #ffffff;
+  --color-surface-soft: #fbfaf3;
+  --color-light-gray: #eeeee9;
+  --color-gray: #e2e3de;
+  --color-gray-dark: #dadad5;
+  --color-text-dark: #1a1c19;
+  --color-text-primary: #202824;
+  --color-text-muted: #404943;
+  --color-text-subtle: #6f776f;
+  --color-outline: #707972;
+  --color-border-soft: #e2e7e2;
+  --color-border-strong: #c9d2c9;
+
+  /* Status Colors */
+  --color-error: #b3261e;
+  --color-error-light: #f9dedc;
+  --color-success: #00452d;
+  --color-success-light: #95d4b1;
+  --color-warning: #503700;
+  --color-warning-light: #ffdeaa;
+  --color-info: #396845;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 24px rgba(26, 28, 25, 0.08);
+  --shadow-lg: 0 18px 42px rgba(26, 28, 25, 0.12);
+  --shadow-xl: 0 26px 70px rgba(26, 28, 25, 0.16);
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+
+  /* Spacing Scale */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+  --space-4xl: 40px;
+
+  /* Typography */
+  --font-family:
+    "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Font Sizes */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 32px;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+
+  /* Z-Index Scale */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+}

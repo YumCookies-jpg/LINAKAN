@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detail Limbah - LINAKAN</title>
+    <link rel="stylesheet" href="../assets/css/variables.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/base.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/components.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/layout.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/responsive.css?v=ui2" />
+    <style>
+      .detail-container {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: var(--space-3xl);
+        margin-bottom: var(--space-3xl);
+      }
+
+      .detail-image {
+        width: 100%;
+        height: 400px;
+        background:
+          linear-gradient(135deg, rgba(255, 222, 170, 0.82), rgba(177, 240, 205, 0.76)),
+          repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.26) 0 10px, transparent 10px 20px);
+        border: 1px solid rgba(0, 69, 45, 0.12);
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 120px;
+        margin-bottom: var(--space-2xl);
+      }
+
+      .detail-section {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-md);
+        padding: var(--space-2xl);
+        margin-bottom: var(--space-2xl);
+      }
+
+      .section-title {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        margin-bottom: var(--space-lg);
+        color: var(--color-text-dark);
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-2xl);
+      }
+
+      .info-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .info-label {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-sm);
+        text-transform: uppercase;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      .info-value {
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text-dark);
+        font-size: var(--font-size-base);
+      }
+
+      .compatibility-meter {
+        background: var(--color-light-gray);
+        height: 30px;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        margin-top: var(--space-md);
+      }
+
+      .compatibility-fill {
+        height: 100%;
+        background: var(--color-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-white);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-semibold);
+      }
+
+      .instant-match-banner {
+        background: var(--color-tertiary);
+        color: var(--color-white);
+        padding: var(--space-2xl);
+        border-radius: var(--radius-md);
+        margin-bottom: var(--space-2xl);
+        text-align: center;
+      }
+
+      .instant-match-icon {
+        font-size: 48px;
+        margin-bottom: var(--space-md);
+      }
+
+      .instant-match-text {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+      }
+
+      .compatibility-reasons {
+        background: var(--color-surface-soft);
+        border: 1px solid rgba(0, 69, 45, 0.16);
+        padding: var(--space-lg);
+        border-radius: var(--radius-md);
+        margin-top: var(--space-lg);
+      }
+
+      .reason-item {
+        display: flex;
+        gap: var(--space-md);
+        margin-bottom: var(--space-md);
+        font-size: var(--font-size-sm);
+      }
+
+      .reason-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .reason-check {
+        color: var(--color-primary);
+        flex-shrink: 0;
+        font-weight: var(--font-weight-bold);
+      }
+
+      .seller-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-md);
+        padding: var(--space-lg);
+        margin-bottom: var(--space-lg);
+      }
+
+      .seller-header {
+        display: flex;
+        align-items: center;
+        gap: var(--space-lg);
+        margin-bottom: var(--space-lg);
+      }
+
+      .seller-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: var(--radius-md);
+        background: var(--color-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-white);
+        font-size: 24px;
+      }
+
+      .seller-info {
+        flex: 1;
+      }
+
+      .seller-name {
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text-dark);
+      }
+
+      .seller-rating {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+        margin-top: var(--space-sm);
+      }
+
+      .stars {
+        color: var(--color-warning);
+        margin-right: var(--space-sm);
+      }
+
+      .checkout-summary {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-md);
+        padding: var(--space-lg);
+        position: sticky;
+        top: 20px;
+        box-shadow: var(--shadow-md);
+      }
+
+      .summary-line {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: var(--space-md);
+        font-size: var(--font-size-sm);
+      }
+
+      .summary-line.total {
+        border-top: 1px solid var(--color-border-soft);
+        padding-top: var(--space-md);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-primary);
+        font-size: var(--font-size-base);
+      }
+
+      .checkout-actions {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-md);
+        margin-top: var(--space-2xl);
+      }
+
+      .shelf-life-warning {
+        background: rgba(80, 55, 0, 0.1);
+        border: 1px solid rgba(80, 55, 0, 0.2);
+        padding: var(--space-lg);
+        border-radius: var(--radius-md);
+        margin-top: var(--space-lg);
+        font-size: var(--font-size-sm);
+        color: var(--color-warning);
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      @media (max-width: 1024px) {
+        .detail-container {
+          grid-template-columns: 1fr;
+        }
+
+        .checkout-summary {
+          position: static;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .info-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div
+        class="navbar-brand"
+        onclick="window.location.href = '../index.html'"
+      >
+        <span class="brand-mark"></span> LINAKAN
+      </div>
+      <ul class="navbar-menu">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="transactions.html">Transaksi</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-3xl mb-3xl">
+      <!-- Breadcrumb -->
+      <ul class="breadcrumb">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li class="active" id="breadcrumb-item">Detail Limbah</li>
+      </ul>
+
+      <div class="detail-container">
+        <!-- Main Content -->
+        <div>
+          <!-- Image -->
+          <div class="detail-image waste-visual" id="listing-image">LINAKAN</div>
+
+          <!-- Instant Match Banner -->
+          <div id="instant-match-banner" style="display: none">
+            <div class="instant-match-banner">
+              <div class="instant-match-text">Instant Match!</div>
+              <div
+                style="
+                  font-size: var(--font-size-sm);
+                  margin-top: var(--space-sm);
+                "
+              >
+                Limbah ini sangat cocok untuk kebutuhan pakan yang Anda pilih.
+              </div>
+            </div>
+          </div>
+
+          <!-- Listing Info -->
+          <div class="detail-section">
+            <h1 id="listing-name" style="margin: 0 0 var(--space-lg) 0">
+              Memuat...
+            </h1>
+
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Kategori</span>
+                <span class="info-value" id="listing-category">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Berat</span>
+                <span class="info-value" id="listing-weight">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Kualitas</span>
+                <span class="info-value" id="listing-quality">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Harga/kg</span>
+                <span class="info-value" id="listing-price-per-kg">-</span>
+              </div>
+            </div>
+
+            <div class="info-item" style="margin-top: var(--space-lg)">
+              <span class="info-label">Catatan</span>
+              <span class="info-value" id="listing-notes">-</span>
+            </div>
+          </div>
+
+          <!-- Compatibility -->
+          <div
+            class="detail-section"
+            id="compatibility-section"
+            style="display: none"
+          >
+            <div class="section-title">Kompatibilitas Dengan Ternak Anda</div>
+            <div id="compatibility-content"></div>
+          </div>
+
+          <!-- Location -->
+          <div class="detail-section">
+            <div class="section-title">Lokasi Pengambilan</div>
+            <div class="info-item">
+              <span class="info-label">Alamat</span>
+              <span class="info-value" id="listing-address">-</span>
+            </div>
+            <div class="map-mock" style="margin-top: var(--space-lg)">
+              <span>Mock peta area pickup. Belum terhubung API peta.</span>
+            </div>
+          </div>
+
+          <!-- Shelf Life -->
+          <div class="detail-section">
+            <div class="section-title">Masa Berlaku</div>
+            <div class="info-item">
+              <span class="info-label">Layak Tayang Hingga</span>
+              <span class="info-value" id="expiry-date">-</span>
+            </div>
+            <div
+              id="expiry-warning"
+              class="shelf-life-warning"
+              style="display: none"
+            ></div>
+          </div>
+
+          <!-- Seller Info -->
+          <div class="detail-section">
+            <div class="section-title">Penjual</div>
+            <div class="seller-card">
+              <div class="seller-header">
+                <div class="seller-avatar" id="seller-avatar">S</div>
+                <div class="seller-info">
+                  <div class="seller-name" id="seller-name">-</div>
+                  <div class="seller-rating" id="seller-rating">
+                    <span class="stars">★★★★★</span
+                    ><span id="rating-value">5.0</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="
+                  font-size: var(--font-size-sm);
+                  color: var(--color-text-muted);
+                "
+              >
+                <div>Lokasi: <span id="seller-location">-</span></div>
+                <div>Kontak demo: <a href="#" id="seller-phone">-</a></div>
+              </div>
+              <button
+                class="btn btn-outline"
+                style="width: 100%; margin-top: var(--space-lg)"
+                onclick="contactSeller()"
+              >
+                Hubungi Penjual
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar - Purchase Summary -->
+        <div>
+          <div class="checkout-summary">
+            <div class="section-title" style="margin-top: 0">
+              Ringkasan Pembelian
+            </div>
+
+            <div class="summary-line">
+              <span>Harga Limbah</span>
+              <span id="summary-price">-</span>
+            </div>
+            <div class="summary-line">
+              <span>Biaya Layanan LINAKAN</span>
+              <span id="summary-fee">-</span>
+            </div>
+            <div class="summary-line total">
+              <span>Total</span>
+              <span id="summary-total">-</span>
+            </div>
+
+            <div class="info-item" style="margin-top: var(--space-lg)">
+              <span class="info-label">Saldo Dompet Anda</span>
+              <span class="info-value" id="wallet-balance">-</span>
+            </div>
+
+            <div
+              id="wallet-warning"
+              class="alert alert-error"
+              style="margin-top: var(--space-lg); display: none"
+            >
+              Saldo dompet Anda tidak cukup. Silakan top up terlebih dahulu.
+            </div>
+
+            <div class="checkout-actions">
+              <button
+                class="btn btn-primary"
+                id="buy-btn"
+                onclick="openConfirmation()"
+              >
+                Konfirmasi & Beli
+              </button>
+              <button class="btn btn-outline" onclick="window.history.back()">
+                Kembali
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmation-modal">
+      <div class="modal-content" style="max-width: 500px">
+        <div class="modal-header">
+          <h2 class="modal-title">Konfirmasi Pembelian</h2>
+          <button
+            type="button"
+            class="modal-close"
+            onclick="closeConfirmation()"
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Limbah</span>
+              <span class="info-value" id="confirm-waste">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Berat</span>
+              <span class="info-value" id="confirm-weight">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Harga</span>
+              <span class="info-value" id="confirm-price">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Penjual</span>
+              <span class="info-value" id="confirm-seller">-</span>
+            </div>
+          </div>
+
+          <div
+            style="
+              background: var(--color-light-gray);
+              padding: var(--space-lg);
+              border-radius: var(--radius-md);
+              margin-top: var(--space-lg);
+            "
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: var(--space-md);
+              "
+            >
+              <span>Subtotal:</span>
+              <strong id="confirm-subtotal">-</strong>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: var(--space-md);
+              "
+            >
+              <span>Biaya Layanan:</span>
+              <strong id="confirm-fee">-</strong>
+            </div>
+            <div
+              style="
+                border-top: 1px solid var(--color-border-soft);
+                padding-top: var(--space-md);
+                display: flex;
+                justify-content: space-between;
+              "
+            >
+              <span style="font-weight: var(--font-weight-semibold)"
+                >Total Pembayaran:</span
+              >
+              <strong
+                style="
+                  color: var(--color-primary);
+                  font-size: var(--font-size-lg);
+                "
+                id="confirm-total"
+                >-</strong
+              >
+            </div>
+          </div>
+
+          <div style="margin-top: var(--space-lg)">
+            <input
+              type="checkbox"
+              id="agree-checkbox"
+              style="margin-right: var(--space-md)"
+            />
+            <label for="agree-checkbox" style="font-size: var(--font-size-sm)">
+              Saya setuju dengan syarat dan ketentuan LINAKAN
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-ghost"
+            onclick="closeConfirmation()"
+          >
+            Batal
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            onclick="confirmPurchase()"
+            id="confirm-btn"
+          >
+            Konfirmasi Pembayaran
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../assets/js/data.js?v=ui2"></script>
+    <script src="../assets/js/shelf-life.js?v=ui2"></script>
+    <script src="../assets/js/pricing.js?v=ui2"></script>
+    <script src="../assets/js/matching.js?v=ui2"></script>
+    <script src="../assets/js/wallet.js?v=ui2"></script>
+
+    <script>
+      let currentFarmer = null;
+      let currentListing = null;
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const currentUser = DataManager.getCurrentUser();
+        if (!currentUser || currentUser.userType !== "farmer") {
+          window.location.href = "../index.html";
+          return;
+        }
+
+        currentFarmer = DataManager.getFarmer(currentUser.userId);
+        if (!currentFarmer) {
+          window.location.href = "../index.html";
+          return;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const listingId = urlParams.get("id");
+
+        if (!listingId) {
+          window.location.href = "dashboard.html";
+          return;
+        }
+
+        currentListing = DataManager.getListing(listingId);
+        if (!currentListing) {
+          window.location.href = "dashboard.html";
+          return;
+        }
+
+        loadListingDetail();
+      });
+
+      function loadListingDetail() {
+        const seller = DataManager.getSeller(currentListing.sellerId);
+        const category = DataManager.WASTE_CATEGORIES[currentListing.category];
+        const expiryInfo = ShelfLifeManager.getExpiryInfo(
+          currentListing.category,
+          currentListing.createdAt,
+        );
+        const matchResult = MatchingEngine.calculateCompatibility(
+          currentListing,
+          currentFarmer,
+        );
+        const checkoutInfo = WalletManager.getFarmerWalletSummary(
+          currentFarmer.id,
+        );
+
+        // Load listing info
+        document.getElementById("listing-name").textContent =
+          currentListing.wasteName;
+        document.getElementById("listing-category").textContent = category.name;
+        document.getElementById("listing-weight").textContent =
+          `${currentListing.weight} kg`;
+        document.getElementById("listing-quality").textContent =
+          currentListing.quality || "-";
+        document.getElementById("listing-price-per-kg").textContent =
+          `Rp ${currentListing.pricePerKg.toLocaleString("id-ID")}`;
+        document.getElementById("listing-notes").textContent =
+          currentListing.notes || "Tidak ada catatan tambahan";
+        document.getElementById("listing-address").textContent =
+          currentListing.pickupAddress;
+
+        // Load expiry info
+        document.getElementById("expiry-date").textContent =
+          expiryInfo.expiryDate;
+        if (expiryInfo.status === "expiring_soon") {
+          const warning = document.getElementById("expiry-warning");
+          warning.textContent = `⚠ Limbah ini akan kadaluarsa dalam ${expiryInfo.message.split("Tersisa ")[1].split(" ")[0]} jam`;
+          warning.style.display = "block";
+        }
+
+        // Load seller info
+        document.getElementById("seller-name").textContent = seller.name;
+        document.getElementById("seller-location").textContent =
+          seller.location;
+        document.getElementById("seller-phone").textContent = seller.phone;
+        document.getElementById("rating-value").textContent =
+          seller.averageRating.toFixed(1);
+
+        // Load compatibility
+        if (matchResult.score > 0) {
+          const compatSection = document.getElementById(
+            "compatibility-section",
+          );
+          compatSection.style.display = "block";
+
+          let reasons = '<div class="compatibility-reasons">';
+          reasons += `<div class="compatibility-meter"><div class="compatibility-fill" style="width: ${matchResult.score}%;">${matchResult.score}%</div></div>`;
+          reasons += '<div style="margin-top: var(--space-lg);">';
+          reasons += `<div class="reason-item"><span class="reason-check">OK</span><span>Kategori limbah sesuai dengan kebutuhan pakan yang dipilih.</span></div>`;
+          reasons += `<div class="reason-item"><span class="reason-check">OK</span><span>Jarak: ${matchResult.details.distance} km, masih dalam radius maksimal 15 km.</span></div>`;
+          reasons += `<div class="reason-item"><span class="reason-check">OK</span><span>Kapasitas: ${matchResult.details.capacityPercentage}% dari kapasitas mingguan.</span></div>`;
+          reasons += "</div></div>";
+          document.getElementById("compatibility-content").innerHTML = reasons;
+        }
+
+        // Show instant match banner
+        if (matchResult.isInstantMatch) {
+          document.getElementById("instant-match-banner").style.display =
+            "block";
+        }
+
+        // Load pricing
+        const priceInfo = PricingEngine.calculateWithFee(
+          currentListing.finalPrice,
+        );
+        document.getElementById("summary-price").textContent =
+          `Rp ${currentListing.finalPrice.toLocaleString("id-ID")}`;
+        document.getElementById("summary-fee").textContent =
+          `Rp ${priceInfo.platformFee.toLocaleString("id-ID")}`;
+        document.getElementById("summary-total").textContent =
+          `Rp ${priceInfo.total.toLocaleString("id-ID")}`;
+
+        // Load wallet balance
+        const wallet = WalletManager.getBalance(currentFarmer.id);
+        document.getElementById("wallet-balance").textContent =
+          wallet.formattedBalance;
+
+        // Check if enough balance
+        if (checkoutInfo.balance < priceInfo.total) {
+          document.getElementById("wallet-warning").style.display = "block";
+          document.getElementById("buy-btn").disabled = true;
+        }
+      }
+
+      function openConfirmation() {
+        const priceInfo = PricingEngine.calculateWithFee(
+          currentListing.finalPrice,
+        );
+
+        document.getElementById("confirm-waste").textContent =
+          currentListing.wasteName;
+        document.getElementById("confirm-weight").textContent =
+          `${currentListing.weight} kg`;
+        document.getElementById("confirm-price").textContent =
+          `Rp ${currentListing.finalPrice.toLocaleString("id-ID")}`;
+        document.getElementById("confirm-seller").textContent =
+          currentListing.sellerName;
+        document.getElementById("confirm-subtotal").textContent =
+          `Rp ${currentListing.finalPrice.toLocaleString("id-ID")}`;
+        document.getElementById("confirm-fee").textContent =
+          `Rp ${priceInfo.platformFee.toLocaleString("id-ID")}`;
+        document.getElementById("confirm-total").textContent =
+          `Rp ${priceInfo.total.toLocaleString("id-ID")}`;
+
+        document.getElementById("confirmation-modal").classList.add("active");
+      }
+
+      function closeConfirmation() {
+        document
+          .getElementById("confirmation-modal")
+          .classList.remove("active");
+        document.getElementById("agree-checkbox").checked = false;
+      }
+
+      function confirmPurchase() {
+        if (!document.getElementById("agree-checkbox").checked) {
+          alert("Silakan setujui syarat dan ketentuan");
+          return;
+        }
+
+        const result = WalletManager.processTransaction({
+          farmerId: currentFarmer.id,
+          sellerId: currentListing.sellerId,
+          listingId: currentListing.id,
+        });
+
+        if (!result.success) {
+          alert("Gagal memproses transaksi: " + result.error);
+          return;
+        }
+
+        // Update listing status
+        DataManager.updateListing(currentListing.id, { status: "reserved" });
+
+        // Show success message
+        alert("Pembelian berhasil dikonfirmasi.");
+        closeConfirmation();
+
+        // Redirect to transactions
+        setTimeout(() => {
+          window.location.href = "transactions.html";
+        }, 1500);
+      }
+
+      function contactSeller() {
+        alert(
+          "Fitur chat akan segera hadir. Silakan hubungi penjual melalui nomor: " +
+            currentListing.sellerPhone || "Hubungi melalui platform",
+        );
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - LINAKAN</title>
+    <link rel="stylesheet" href="../assets/css/variables.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/base.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/components.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/layout.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/responsive.css?v=ui2" />
+    <style>
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-2xl);
+        margin-bottom: var(--space-3xl);
+      }
+
+      .kpi-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-md);
+        padding: var(--space-2xl);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .kpi-value {
+        font-size: var(--font-size-3xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-primary);
+        margin-bottom: var(--space-sm);
+      }
+
+      .kpi-label {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      .kpi-trend {
+        font-size: var(--font-size-xs);
+        color: var(--color-success);
+        margin-top: var(--space-md);
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-2xl);
+        gap: var(--space-lg);
+      }
+
+      .section-title {
+        font-size: var(--font-size-xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-dark);
+        margin: 0;
+      }
+
+      .table-container {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-md);
+        overflow-x: auto;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: var(--space-3xl);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-2xl);
+        margin-bottom: var(--space-3xl);
+      }
+
+      .chart-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-md);
+        padding: var(--space-2xl);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .filter-group {
+        display: flex;
+        gap: var(--space-md);
+        margin-bottom: var(--space-2xl);
+        flex-wrap: wrap;
+      }
+
+      .filter-group select {
+        padding: var(--space-md) var(--space-lg);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-md);
+        font-family: var(--font-family);
+      }
+
+      .status-badge-available {
+        background: rgba(0, 69, 45, 0.1);
+        color: var(--color-primary);
+      }
+
+      .status-badge-reserved {
+        background: rgba(80, 55, 0, 0.1);
+        color: var(--color-warning);
+      }
+
+      .status-badge-completed {
+        background: rgba(0, 69, 45, 0.1);
+        color: var(--color-success);
+      }
+
+      .status-badge-expired {
+        background: rgba(179, 38, 30, 0.1);
+        color: var(--color-error);
+      }
+
+      @media (max-width: 1024px) {
+        .kpi-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .kpi-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .filter-group {
+          flex-direction: column;
+        }
+
+        .section-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="navbar-brand"><span class="brand-mark"></span> LINAKAN Admin</div>
+      <ul class="navbar-menu">
+        <li><a href="#" class="active">Dashboard</a></li>
+        <li><a href="#listings">Listing</a></li>
+        <li><a href="#transactions">Transaksi</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <button class="btn btn-ghost" onclick="handleLogout()">Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-3xl mb-3xl">
+      <div class="eyebrow">Monitoring internal</div>
+      <h1>Admin Dashboard</h1>
+      <p class="page-kicker">Pantau supply, demand, matching, transaksi, dan status masa simpan tanpa mengklaim sinkronisasi backend real-time.</p>
+
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-value" id="kpi-listings">0</div>
+          <div class="kpi-label">Listing tersedia</div>
+          <div class="kpi-trend">Demo lokal</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="kpi-weight">0 kg</div>
+          <div class="kpi-label">Limbah tersedia</div>
+          <div class="kpi-trend">Dari data dummy</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="kpi-matches">0</div>
+          <div class="kpi-label">Match aktif</div>
+          <div class="kpi-trend">Radius 15 km</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="kpi-revenue">Rp 0</div>
+          <div class="kpi-label">Biaya layanan</div>
+          <div class="kpi-trend">Simulasi wallet</div>
+        </div>
+      </div>
+
+      <!-- Status Overview -->
+      <div class="stats-grid">
+        <div class="chart-card">
+          <div class="section-title" style="margin-bottom: var(--space-2xl)">
+            Distribusi Status Listing
+          </div>
+          <div id="status-breakdown">
+            <!-- Status breakdown will be rendered here -->
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="section-title" style="margin-bottom: var(--space-2xl)">
+            Kategori Limbah Teratas
+          </div>
+          <div id="category-breakdown">
+            <!-- Category breakdown will be rendered here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Listings Table -->
+      <div>
+        <div class="section-header" id="listings">
+          <h2 class="section-title">Listing Terbaru</h2>
+          <div class="filter-group">
+            <button class="btn btn-outline btn-sm" onclick="exportListingsCSV()">Export Listing CSV</button>
+            <select onchange="filterListingsByStatus(this.value)">
+              <option value="">Semua Status</option>
+              <option value="available">Available</option>
+              <option value="reserved">Reserved</option>
+              <option value="completed">Completed</option>
+              <option value="expired">Expired</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nama Limbah</th>
+                <th>Seller</th>
+                <th>Berat (kg)</th>
+                <th>Harga (Rp)</th>
+                <th>Status</th>
+                <th>Dibuat</th>
+              </tr>
+            </thead>
+            <tbody id="listings-table">
+              <!-- Listings will be rendered here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Transactions Table -->
+      <div style="margin-top: var(--space-3xl)">
+        <div class="section-header" id="transactions">
+          <h2 class="section-title">Transaksi Terbaru</h2>
+          <button class="btn btn-outline btn-sm" onclick="exportTransactionsCSV()">Export Transaksi CSV</button>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Seller</th>
+                <th>Buyer</th>
+                <th>Limbah</th>
+                <th>Berat (kg)</th>
+                <th>Nilai (Rp)</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="transactions-table">
+              <!-- Transactions will be rendered here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script src="../assets/js/data.js?v=ui2"></script>
+    <script src="../assets/js/shelf-life.js?v=ui2"></script>
+    <script src="../assets/js/wallet.js?v=ui2"></script>
+    <script src="../assets/js/matching.js?v=ui2"></script>
+
+    <script>
+      let allListings = [];
+      let filteredListings = [];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const currentUser = DataManager.getCurrentUser();
+        if (!currentUser || currentUser.userType !== "admin") {
+          window.location.href = "../index.html";
+          return;
+        }
+
+        loadAdminDashboard();
+      });
+
+      function loadAdminDashboard() {
+        // Load all data
+        const allSellers = DataManager.getAllSellers();
+        const allFarmers = DataManager.getAllFarmers();
+        allListings = DataManager.getAllListings();
+        const allTransactions = DataManager.getAllTransactions();
+
+        // Calculate KPIs
+        const activeListings = allListings.filter(
+          (l) => l.status === "available",
+        );
+        const totalWeight = activeListings.reduce(
+          (sum, l) => sum + l.weight,
+          0,
+        );
+        const revenue = WalletManager.getPlatformRevenue();
+
+        // Calculate matches count (simple estimate)
+        let matchCount = 0;
+        allFarmers.forEach((farmer) => {
+          const matches = MatchingEngine.findMatchesForFarmer(
+            farmer,
+            allListings,
+          );
+          matchCount += matches.length;
+        });
+
+        document.getElementById("kpi-listings").textContent =
+          activeListings.length;
+        document.getElementById("kpi-weight").textContent = totalWeight + " kg";
+        document.getElementById("kpi-matches").textContent = matchCount;
+        document.getElementById("kpi-revenue").textContent =
+          revenue.formattedFees;
+
+        // Status breakdown
+        const statusCounts = {
+          available: allListings.filter((l) => l.status === "available").length,
+          reserved: allListings.filter((l) => l.status === "reserved").length,
+          completed: allListings.filter((l) => l.status === "completed").length,
+          expired: allListings.filter((l) => l.status === "expired").length,
+        };
+
+        const statusHTML = `
+        <div style="display: flex; flex-direction: column; gap: var(--space-lg);">
+          ${Object.entries(statusCounts)
+            .map(
+              ([status, count]) => `
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-sm);">
+                <span style="text-transform: capitalize;">${status}</span>
+                <strong>${count}</strong>
+              </div>
+              <div style="background: var(--color-light-gray); height: 8px; border-radius: 4px; overflow: hidden;">
+                <div style="background: var(--color-primary); height: 100%; width: ${(count / allListings.length) * 100 || 0}%;"></div>
+              </div>
+            </div>
+          `,
+            )
+            .join("")}
+        </div>
+      `;
+        document.getElementById("status-breakdown").innerHTML = statusHTML;
+
+        // Category breakdown
+        const categoryCounts = {};
+        allListings.forEach((l) => {
+          categoryCounts[l.category] = (categoryCounts[l.category] || 0) + 1;
+        });
+
+        const categoryHTML = `
+        <div style="display: flex; flex-direction: column; gap: var(--space-lg);">
+          ${Object.entries(categoryCounts)
+            .map(
+              ([category, count]) => `
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-sm);">
+                <span>${DataManager.WASTE_CATEGORIES[category]?.name || category}</span>
+                <strong>${count}</strong>
+              </div>
+              <div style="background: var(--color-light-gray); height: 8px; border-radius: 4px; overflow: hidden;">
+                <div style="background: var(--color-secondary); height: 100%; width: ${(count / allListings.length) * 100 || 0}%;"></div>
+              </div>
+            </div>
+          `,
+            )
+            .join("")}
+        </div>
+      `;
+        document.getElementById("category-breakdown").innerHTML = categoryHTML;
+
+        // Load listings table
+        loadListingsTable(allListings.slice(0, 10));
+
+        // Load transactions table
+        loadTransactionsTable(allTransactions.slice(0, 10));
+      }
+
+      function loadListingsTable(listings) {
+        const tbody = document.getElementById("listings-table");
+        filteredListings = listings;
+
+        if (listings.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="7" style="text-align: center; padding: var(--space-2xl);">Belum ada listing</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = listings
+          .map((listing) => {
+            const createdDate = new Date(listing.createdAt).toLocaleDateString(
+              "id-ID",
+            );
+
+            return `
+          <tr>
+            <td><strong>${listing.id.substring(0, 8)}...</strong></td>
+            <td>${listing.wasteName}</td>
+            <td>${listing.sellerName}</td>
+            <td>${listing.weight} kg</td>
+            <td>Rp ${listing.finalPrice.toLocaleString("id-ID")}</td>
+            <td>
+              <span class="badge status-badge-${listing.status}">
+                ${listing.status.charAt(0).toUpperCase() + listing.status.slice(1)}
+              </span>
+            </td>
+            <td>${createdDate}</td>
+          </tr>
+        `;
+          })
+          .join("");
+      }
+
+      function loadTransactionsTable(transactions) {
+        const tbody = document.getElementById("transactions-table");
+
+        if (transactions.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="8" style="text-align: center; padding: var(--space-2xl);">Belum ada transaksi</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = transactions
+          .map((txn) => {
+            const seller = DataManager.getSeller(txn.sellerId);
+            const farmer = DataManager.getFarmer(txn.farmerId);
+            const createdDate = new Date(txn.createdAt).toLocaleDateString(
+              "id-ID",
+            );
+
+            return `
+          <tr>
+            <td><strong>${txn.id.substring(0, 8)}...</strong></td>
+            <td>${seller?.name || "Unknown"}</td>
+            <td>${farmer?.name || "Unknown"}</td>
+            <td>${txn.wasteName || "-"}</td>
+            <td>${txn.listingWeight || "-"} kg</td>
+            <td>Rp ${(txn.totalPrice || 0).toLocaleString("id-ID")}</td>
+            <td>
+              <span class="badge ${txn.status === "confirmed" ? "badge-success" : "badge-info"}">
+                ${txn.status.charAt(0).toUpperCase() + txn.status.slice(1)}
+              </span>
+            </td>
+            <td>${createdDate}</td>
+          </tr>
+        `;
+          })
+          .join("");
+      }
+
+      function filterListingsByStatus(status) {
+        if (!status) {
+          loadListingsTable(allListings.slice(0, 10));
+        } else {
+          const filtered = allListings.filter((l) => l.status === status);
+          loadListingsTable(filtered.slice(0, 10));
+        }
+      }
+
+      function downloadCSV(filename, headers, rows) {
+        const escapeCell = (value) => `"${String(value ?? "").replaceAll('"', '""')}"`;
+        const csv = [headers, ...rows]
+          .map((row) => row.map(escapeCell).join(","))
+          .join("\n");
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function exportListingsCSV() {
+        const rows = allListings.map((listing) => [
+          listing.id,
+          listing.wasteName,
+          listing.sellerName,
+          listing.weight,
+          listing.finalPrice,
+          listing.status,
+          listing.createdAt,
+        ]);
+        downloadCSV("linakan-listings.csv", ["ID", "Nama Limbah", "Seller", "Berat", "Harga", "Status", "Dibuat"], rows);
+      }
+
+      function exportTransactionsCSV() {
+        const transactions = DataManager.getAllTransactions();
+        const rows = transactions.map((txn) => [
+          txn.id,
+          txn.sellerId,
+          txn.farmerId,
+          txn.wasteName || "",
+          txn.listingWeight || "",
+          txn.totalPrice || 0,
+          txn.status,
+          txn.createdAt,
+        ]);
+        downloadCSV("linakan-transactions.csv", ["ID", "Seller", "Buyer", "Limbah", "Berat", "Nilai", "Status", "Tanggal"], rows);
+      }
+
+      function handleLogout() {
+        DataManager.logout();
+        window.location.href = "../index.html";
+      }
+    </script>
+  </body>
+</html>

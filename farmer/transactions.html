@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transaksi Peternak - LINAKAN</title>
+    <link rel="stylesheet" href="../assets/css/variables.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/base.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/components.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/layout.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/responsive.css?v=ui2" />
+    <style>
+      .table-container {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-lg);
+        overflow-x: auto;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-2xl);
+        gap: var(--space-lg);
+      }
+
+      .section-title {
+        font-size: var(--font-size-xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-dark);
+        margin: 0;
+      }
+
+      .filter-group {
+        display: flex;
+        gap: var(--space-md);
+        flex-wrap: wrap;
+      }
+
+      .filter-button {
+        padding: var(--space-md) var(--space-lg);
+        border: 1px solid var(--color-border-soft);
+        background: var(--color-white);
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        font-size: var(--font-size-sm);
+      }
+
+      .filter-button:hover {
+        border-color: var(--color-primary);
+      }
+
+      .filter-button.active {
+        background: var(--color-primary);
+        color: var(--color-white);
+        border-color: var(--color-primary);
+      }
+
+      .transaction-row {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: var(--space-lg);
+        padding: var(--space-lg);
+        border-bottom: 1px solid var(--color-border-soft);
+        align-items: center;
+      }
+
+      .transaction-row:last-child {
+        border-bottom: none;
+      }
+
+      .transaction-row-header {
+        background: var(--color-light-gray);
+        font-weight: var(--font-weight-semibold);
+        text-transform: uppercase;
+        font-size: var(--font-size-xs);
+        color: var(--color-text-muted);
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: var(--radius-md);
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-semibold);
+      }
+
+      .status-pending {
+        background: rgba(80, 55, 0, 0.1);
+        color: var(--color-warning);
+      }
+
+      .status-confirmed {
+        background: rgba(0, 69, 45, 0.1);
+        color: var(--color-success);
+      }
+
+      .status-completed {
+        background: rgba(0, 69, 45, 0.1);
+        color: var(--color-success);
+      }
+
+      .status-cancelled {
+        background: rgba(179, 38, 30, 0.1);
+        color: var(--color-error);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: var(--space-3xl);
+        color: var(--color-text-muted);
+      }
+
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-2xl);
+        margin-bottom: var(--space-3xl);
+      }
+
+      .stat-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-lg);
+        padding: var(--space-lg);
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: var(--font-size-2xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-primary);
+        margin-bottom: var(--space-sm);
+      }
+
+      .stat-label {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+      }
+
+      @media (max-width: 1024px) {
+        .stats-row {
+          grid-template-columns: 1fr;
+        }
+
+        .transaction-row {
+          grid-template-columns: repeat(5, 1fr);
+        }
+      }
+
+      @media (max-width: 640px) {
+        .filter-group {
+          flex-direction: column;
+        }
+
+        .filter-button {
+          width: 100%;
+        }
+
+        .transaction-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div
+        class="navbar-brand"
+        onclick="window.location.href = '../index.html'"
+      >
+        <span class="brand-mark"></span> LINAKAN
+      </div>
+      <ul class="navbar-menu">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="transactions.html" class="active">Transaksi</a></li>
+        <li><a href="wallet.html">Dompet</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <button class="btn btn-ghost" onclick="handleLogout()">Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-3xl mb-3xl">
+      <h1>📋 Riwayat Transaksi</h1>
+      <p class="text-muted">Kelola semua transaksi pembelian limbah Anda</p>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-label">Total Transaksi</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-completed">0</div>
+          <div class="stat-label">Selesai</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-total-spent">Rp 0</div>
+          <div class="stat-label">Total Pengeluaran</div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="section-header">
+        <h2 class="section-title">Status</h2>
+      </div>
+      <div class="filter-group" style="margin-bottom: var(--space-2xl)">
+        <button class="filter-button active" onclick="filterStatus('all')">
+          Semua
+        </button>
+        <button class="filter-button" onclick="filterStatus('pending')">
+          Pending
+        </button>
+        <button class="filter-button" onclick="filterStatus('confirmed')">
+          Dikonfirmasi
+        </button>
+        <button class="filter-button" onclick="filterStatus('completed')">
+          Selesai
+        </button>
+        <button class="filter-button" onclick="filterStatus('cancelled')">
+          Dibatalkan
+        </button>
+      </div>
+
+      <!-- Transactions Table -->
+      <div class="table-container">
+        <div class="transaction-row transaction-row-header">
+          <div>Tanggal</div>
+          <div>Limbah</div>
+          <div>Penjual</div>
+          <div>Berat (kg)</div>
+          <div>Total (Rp)</div>
+          <div>Status</div>
+          <div>Aksi</div>
+        </div>
+        <div id="transactions-list">
+          <div class="empty-state">Memuat...</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../assets/js/data.js?v=ui2"></script>
+    <script src="../assets/js/pricing.js?v=ui2"></script>
+
+    <script>
+      let currentFarmer = null;
+      let allTransactions = [];
+      let currentFilter = "all";
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const currentUser = DataManager.getCurrentUser();
+        if (!currentUser || currentUser.userType !== "farmer") {
+          window.location.href = "../index.html";
+          return;
+        }
+
+        currentFarmer = DataManager.getFarmer(currentUser.userId);
+        if (!currentFarmer) {
+          window.location.href = "../index.html";
+          return;
+        }
+
+        loadTransactions();
+      });
+
+      function loadTransactions() {
+        allTransactions = DataManager.getTransactionsByUser(currentFarmer.id);
+
+        // Calculate stats
+        const completed = allTransactions.filter(
+          (t) => t.status === "completed",
+        ).length;
+        const totalSpent = allTransactions.reduce(
+          (sum, t) => sum + (t.totalPrice || 0),
+          0,
+        );
+
+        document.getElementById("stat-total").textContent =
+          allTransactions.length;
+        document.getElementById("stat-completed").textContent = completed;
+        document.getElementById("stat-total-spent").textContent =
+          `Rp ${totalSpent.toLocaleString("id-ID")}`;
+
+        renderTransactions(allTransactions);
+      }
+
+      function renderTransactions(transactions) {
+        const container = document.getElementById("transactions-list");
+
+        if (transactions.length === 0) {
+          container.innerHTML = `
+          <div class="empty-state">
+            <div style="font-size: 48px; margin-bottom: var(--space-lg);">📋</div>
+            <p>Belum ada riwayat transaksi</p>
+          </div>
+        `;
+          return;
+        }
+
+        container.innerHTML = transactions
+          .map((txn) => {
+            const date = new Date(txn.createdAt).toLocaleDateString("id-ID");
+            const seller = DataManager.getSeller(txn.sellerId);
+
+            return `
+          <div class="transaction-row">
+            <div>${date}</div>
+            <div>${txn.wasteName || "-"}</div>
+            <div>${seller?.name || "-"}</div>
+            <div>${txn.listingWeight || "-"}</div>
+            <div><strong>Rp ${(txn.totalPrice || 0).toLocaleString("id-ID")}</strong></div>
+            <div>
+              <span class="status-badge status-${txn.status}">
+                ${txn.status.charAt(0).toUpperCase() + txn.status.slice(1)}
+              </span>
+            </div>
+            <div>
+              <button class="btn btn-sm btn-ghost" onclick="viewDetail('${txn.id}')">Lihat</button>
+            </div>
+          </div>
+        `;
+          })
+          .join("");
+      }
+
+      function filterStatus(status) {
+        currentFilter = status;
+
+        // Update active filter button
+        document
+          .querySelectorAll(".filter-button")
+          .forEach((btn) => btn.classList.remove("active"));
+        event.target.classList.add("active");
+
+        // Filter and render
+        let filtered = allTransactions;
+        if (status !== "all") {
+          filtered = allTransactions.filter((t) => t.status === status);
+        }
+
+        renderTransactions(filtered);
+      }
+
+      function viewDetail(transactionId) {
+        const txn = allTransactions.find((t) => t.id === transactionId);
+        alert(
+          `Detail Transaksi:\n\nID: ${txn.id.substring(0, 8)}\nLimbah: ${txn.wasteName}\nTotal: Rp ${(txn.totalPrice || 0).toLocaleString("id-ID")}\nStatus: ${txn.status}`,
+        );
+      }
+
+      function handleLogout() {
+        DataManager.logout();
+        window.location.href = "../index.html";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LINAKAN - Limbah ke Pakan</title>
+    <link rel="stylesheet" href="assets/css/variables.css?v=ui2" />
+    <link rel="stylesheet" href="assets/css/base.css?v=ui2" />
+    <link rel="stylesheet" href="assets/css/components.css?v=ui2" />
+    <link rel="stylesheet" href="assets/css/layout.css?v=ui2" />
+    <link rel="stylesheet" href="assets/css/responsive.css?v=ui2" />
+    <style>
+      .login-container {
+        max-width: 760px;
+        margin: var(--space-3xl) auto;
+      }
+
+      .form-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-md);
+        padding: var(--space-2xl);
+        box-shadow: var(--shadow-md);
+      }
+
+      .role-selector {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-lg);
+        margin-bottom: var(--space-2xl);
+      }
+
+      .role-button {
+        padding: var(--space-lg);
+        border: 1px solid var(--color-border-soft);
+        background: var(--color-white);
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        text-align: center;
+        transition: all var(--transition-fast);
+        font-size: var(--font-size-base);
+        font-weight: var(--font-weight-semibold);
+      }
+
+      .role-button:hover {
+        border-color: var(--color-primary);
+        background: rgba(0, 69, 45, 0.05);
+      }
+
+      .role-button.active {
+        border-color: var(--color-primary);
+        background: var(--color-primary);
+        color: var(--color-white);
+      }
+
+      .role-icon {
+        width: 34px;
+        height: 34px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: var(--color-surface-soft);
+        color: var(--color-primary);
+        font-weight: var(--font-weight-bold);
+        margin-bottom: var(--space-sm);
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-2xl);
+        padding: var(--space-4xl) var(--space-2xl);
+      }
+
+      .feature-item {
+        text-align: left;
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-md);
+        padding: var(--space-2xl);
+      }
+
+      .feature-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: var(--radius-md);
+        background: var(--color-tertiary-fixed);
+        color: var(--color-tertiary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: var(--font-weight-bold);
+        margin-bottom: var(--space-lg);
+      }
+
+      .feature-title {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        margin-bottom: var(--space-md);
+      }
+
+      .feature-description {
+        color: var(--color-text-muted);
+        font-size: var(--font-size-sm);
+        line-height: var(--line-height-relaxed);
+      }
+
+      .demo-section {
+        padding: var(--space-4xl) var(--space-2xl);
+        text-align: center;
+      }
+
+      .demo-title {
+        font-size: var(--font-size-2xl);
+        font-weight: var(--font-weight-bold);
+        margin-bottom: var(--space-lg);
+      }
+
+      .demo-buttons {
+        display: flex;
+        justify-content: center;
+        gap: var(--space-lg);
+        margin-top: var(--space-2xl);
+      }
+
+      .info-box {
+        background: var(--color-surface-soft);
+        border: 1px solid var(--color-border-soft);
+        padding: var(--space-lg);
+        border-radius: var(--radius-md);
+        margin-bottom: var(--space-lg);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+      }
+
+      .demo-user-card {
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-md);
+        margin-bottom: var(--space-md);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        background: var(--color-white);
+      }
+
+      .demo-user-card:hover {
+        border-color: var(--color-primary);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-1px);
+      }
+
+      .demo-user-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--space-lg);
+        padding: var(--space-lg);
+        text-align: left;
+      }
+
+      @media (max-width: 640px) {
+        .hero-title {
+          font-size: var(--font-size-2xl);
+        }
+
+        .features {
+          grid-template-columns: 1fr;
+        }
+
+        .demo-buttons {
+          flex-direction: column;
+        }
+
+        .role-selector {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="navbar-brand"><span class="brand-mark"></span> LINAKAN</div>
+      <div class="navbar-actions">
+        <button class="btn btn-ghost" onclick="scrollToLogin()">Masuk</button>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-product">
+      <div class="container">
+        <!-- <div class="eyebrow">Pemanfaatan Limbah Makanan </div> -->
+        <h1>
+          LINAKAN menghubungkan limbah makanan layak pakai dengan peternak dan
+          petani terdekat.
+        </h1>
+        <p>
+          IRT, bakery, dan UMKM dapat menayangkan limbah minimal 2 kg. Peternak
+          mendapat rekomendasi berdasarkan kategori pakan, kapasitas, dan radius
+          maksimum 15 km.
+        </p>
+        <div class="hero-actions mt-2xl">
+          <button class="btn btn-primary btn-lg" onclick="scrollToLogin()">
+            Coba Demo
+          </button>
+          <button
+            class="btn btn-outline btn-lg"
+            onclick="loginAsFarmer('farmer1')"
+          >
+            Lihat Instant Match
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <section class="story-band">
+      <div class="container">
+        <div class="story-grid">
+          <div class="story-step">
+            <span class="step-number">1</span>
+            <h3>Listing Limbah</h3>
+            <p class="text-muted">
+              Seller memasukkan kategori, berat, foto, dan lokasi pengambilan.
+            </p>
+          </div>
+          <div class="story-step">
+            <span class="step-number">2</span>
+            <h3>Masa Simpan</h3>
+            <p class="text-muted">
+              Sistem menghitung masa berlaku otomatis dari kategori limbah.
+            </p>
+          </div>
+          <div class="story-step">
+            <span class="step-number">3</span>
+            <h3>Instant Match</h3>
+            <p class="text-muted">
+              Peternak melihat kecocokan dalam radius 15 km dan kapasitasnya.
+            </p>
+          </div>
+          <div class="story-step">
+            <span class="step-number">4</span>
+            <h3>Konfirmasi</h3>
+            <p class="text-muted">
+              Listing baru menjadi reserved setelah peternak menekan konfirmasi
+              beli.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <div class="features">
+      <div class="feature-item">
+        <div class="feature-icon">01</div>
+        <div class="feature-title">Ekonomi Sirkular</div>
+        <div class="feature-description">
+          Limbah makanan menjadi berharga melalui pertanian berkelanjutan
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">85%</div>
+        <div class="feature-title">Instant Match</div>
+        <div class="feature-description">
+          Label Instant Match muncul saat kecocokan mencapai minimal 85%
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">Rp</div>
+        <div class="feature-title">E-Wallet</div>
+        <div class="feature-description">
+          Dompet simulasi menampilkan subtotal, biaya layanan, dan riwayat
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Section -->
+    <div class="demo-section">
+      <div class="container-sm" id="login-section">
+        <h2 class="demo-title">Masuk ke LINAKAN</h2>
+
+        <div class="login-container">
+          <div class="form-card">
+            <div
+              class="section-title"
+              style="text-align: left; margin-bottom: var(--space-lg)"
+            >
+              Pilih Peran Anda
+            </div>
+
+            <div class="role-selector">
+              <button class="role-button active" onclick="selectRole('seller')">
+                <div class="role-icon">S</div>
+                <div>Penjual</div>
+                <div
+                  style="
+                    font-size: var(--font-size-xs);
+                    font-weight: normal;
+                    opacity: 0.8;
+                    margin-top: var(--space-sm);
+                  "
+                >
+                  IRT, Bakery, UMKM
+                </div>
+              </button>
+              <button class="role-button" onclick="selectRole('farmer')">
+                <div class="role-icon">P</div>
+                <div>Peternak</div>
+                <div
+                  style="
+                    font-size: var(--font-size-xs);
+                    font-weight: normal;
+                    opacity: 0.8;
+                    margin-top: var(--space-sm);
+                  "
+                >
+                  Petani & Peternakan
+                </div>
+              </button>
+            </div>
+
+            <div class="info-box">
+              Mode demo frontend. Tidak ada autentikasi produksi, pembayaran
+              nyata, atau integrasi logistik.
+            </div>
+
+            <div id="demo-users">
+              <!-- Demo users will be rendered here -->
+            </div>
+
+            <div
+              style="
+                margin-top: var(--space-2xl);
+                padding-top: var(--space-2xl);
+                border-top: 1px solid var(--color-border-soft);
+              "
+            >
+              <button
+                class="btn btn-primary"
+                style="width: 100%"
+                onclick="openAdminPanel()"
+              >
+                Buka Admin Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="assets/js/data.js?v=ui2"></script>
+
+    <script>
+      let selectedRole = "seller";
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadDemoUsers();
+      });
+
+      function selectRole(role) {
+        selectedRole = role;
+        document
+          .querySelectorAll(".role-button")
+          .forEach((btn) => btn.classList.remove("active"));
+        event.target.closest(".role-button").classList.add("active");
+        loadDemoUsers();
+      }
+
+      function loadDemoUsers() {
+        const container = document.getElementById("demo-users");
+
+        if (selectedRole === "seller") {
+          const sellers = DataManager.getAllSellers();
+          container.innerHTML = sellers
+            .map(
+              (seller) => `
+          <div class="demo-user-card" onclick="loginAsSeller('${seller.id}')">
+            <div class="demo-user-inner">
+              <div>
+                <div style="font-weight: var(--font-weight-semibold);">${seller.name}</div>
+                <div style="font-size: var(--font-size-sm); color: var(--color-text-muted);">
+                  ${seller.type.toUpperCase()} • Saldo: Rp ${seller.walletBalance.toLocaleString("id-ID")}
+                </div>
+              </div>
+              <span aria-hidden="true">-></span>
+            </div>
+          </div>
+        `,
+            )
+            .join("");
+        } else {
+          const farmers = DataManager.getAllFarmers();
+          container.innerHTML = farmers
+            .map(
+              (farmer) => `
+          <div class="demo-user-card" onclick="loginAsFarmer('${farmer.id}')">
+            <div class="demo-user-inner">
+              <div>
+                <div style="font-weight: var(--font-weight-semibold);">${farmer.name}</div>
+                <div style="font-size: var(--font-size-sm); color: var(--color-text-muted);">
+                  ${farmer.livestock.join(", ")} • Saldo: Rp ${farmer.walletBalance.toLocaleString("id-ID")}
+                </div>
+              </div>
+              <span aria-hidden="true">-></span>
+            </div>
+          </div>
+        `,
+            )
+            .join("");
+        }
+      }
+
+      function loginAsSeller(sellerId) {
+        DataManager.setCurrentUser(sellerId, "seller");
+        window.location.href = "seller/dashboard.html";
+      }
+
+      function loginAsFarmer(farmerId) {
+        DataManager.setCurrentUser(farmerId, "farmer");
+        window.location.href = "farmer/dashboard.html";
+      }
+
+      function openAdminPanel() {
+        DataManager.setCurrentUser("admin", "admin");
+        window.location.href = "admin/dashboard.html";
+      }
+
+      function scrollToLogin() {
+        document
+          .getElementById("login-section")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+    </script>
+  </body>
+</html>

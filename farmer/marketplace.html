@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Marketplace - LINAKAN</title>
+    <link rel="stylesheet" href="../assets/css/variables.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/base.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/components.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/layout.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/responsive.css?v=ui2" />
+    <style>
+      .filters-sidebar {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-lg);
+        padding: var(--space-2xl);
+        height: fit-content;
+        position: sticky;
+        top: 20px;
+      }
+
+      .filter-group {
+        margin-bottom: var(--space-2xl);
+      }
+
+      .filter-group:last-child {
+        margin-bottom: 0;
+      }
+
+      .filter-label {
+        font-weight: var(--font-weight-semibold);
+        margin-bottom: var(--space-md);
+        display: block;
+        font-size: var(--font-size-sm);
+      }
+
+      .filter-option {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+        margin-bottom: var(--space-sm);
+        font-size: var(--font-size-sm);
+      }
+
+      .filter-option input {
+        cursor: pointer;
+      }
+
+      .marketplace-container {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: var(--space-2xl);
+      }
+
+      .listings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--space-2xl);
+      }
+
+      .listing-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        transition: all var(--transition-base);
+        cursor: pointer;
+      }
+
+      .listing-card:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-4px);
+      }
+
+      .listing-image {
+        width: 100%;
+        height: 150px;
+        background: var(--color-light-gray);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+      }
+
+      .listing-body {
+        padding: var(--space-lg);
+      }
+
+      .listing-name {
+        font-weight: var(--font-weight-semibold);
+        margin-bottom: var(--space-sm);
+        color: var(--color-text-dark);
+      }
+
+      .listing-category {
+        font-size: var(--font-size-xs);
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-md);
+      }
+
+      .listing-details {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: var(--space-lg);
+        font-size: var(--font-size-sm);
+      }
+
+      .detail-badge {
+        background: var(--color-light-gray);
+        padding: 2px 6px;
+        border-radius: var(--radius-md);
+      }
+
+      .listing-price {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-primary);
+        margin-bottom: var(--space-lg);
+      }
+
+      .listing-seller {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-md);
+        border-top: 1px solid var(--color-border-soft);
+        padding-top: var(--space-md);
+      }
+
+      .shelf-life-badge {
+        background: rgba(80, 55, 0, 0.1);
+        color: var(--color-warning);
+        padding: 4px 8px;
+        border-radius: var(--radius-md);
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-semibold);
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-2xl);
+        gap: var(--space-lg);
+      }
+
+      .sort-control {
+        padding: var(--space-md) var(--space-lg);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-md);
+        font-family: var(--font-family);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: var(--space-3xl);
+        color: var(--color-text-muted);
+        background: var(--color-white);
+        border-radius: var(--radius-lg);
+        border: 1px dashed var(--color-border-soft);
+        grid-column: 1 / -1;
+      }
+
+      @media (max-width: 1024px) {
+        .marketplace-container {
+          grid-template-columns: 1fr;
+        }
+
+        .filters-sidebar {
+          position: static;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .listings-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .filter-option {
+          margin-bottom: var(--space-md);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div
+        class="navbar-brand"
+        onclick="window.location.href = '../index.html'"
+      >
+        <span class="brand-mark"></span> LINAKAN
+      </div>
+      <ul class="navbar-menu">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="marketplace.html" class="active">Marketplace</a></li>
+        <li><a href="transactions.html">Transaksi</a></li>
+        <li><a href="wallet.html">Dompet</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <button class="btn btn-ghost" onclick="handleLogout()">Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-3xl mb-3xl">
+      <h1>🛒 Marketplace Limbah</h1>
+      <p class="text-muted">Jelajahi semua limbah makanan yang tersedia</p>
+
+      <div class="marketplace-container">
+        <!-- Sidebar -->
+        <div class="filters-sidebar">
+          <h3 style="margin-top: 0">Filter</h3>
+
+          <div class="filter-group">
+            <label class="filter-label">Kategori</label>
+            <div class="filter-option">
+              <input
+                type="checkbox"
+                id="filter-roti"
+                onchange="applyFilters()"
+              />
+              <label for="filter-roti">Roti Kering</label>
+            </div>
+            <div class="filter-option">
+              <input
+                type="checkbox"
+                id="filter-tepung"
+                onchange="applyFilters()"
+              />
+              <label for="filter-tepung">Tepung Afkir</label>
+            </div>
+            <div class="filter-option">
+              <input
+                type="checkbox"
+                id="filter-olahan"
+                onchange="applyFilters()"
+              />
+              <label for="filter-olahan">Sisa Makanan Olahan</label>
+            </div>
+            <div class="filter-option">
+              <input
+                type="checkbox"
+                id="filter-sayuran"
+                onchange="applyFilters()"
+              />
+              <label for="filter-sayuran">Sayuran Mentah</label>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label class="filter-label">Status Shelf Life</label>
+            <div class="filter-option">
+              <input
+                type="checkbox"
+                id="filter-fresh"
+                checked
+                onchange="applyFilters()"
+              />
+              <label for="filter-fresh">Fresh (>7 hari)</label>
+            </div>
+            <div class="filter-option">
+              <input
+                type="checkbox"
+                id="filter-expiring"
+                checked
+                onchange="applyFilters()"
+              />
+              <label for="filter-expiring">Expiring (<24 jam)</label>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label class="filter-label">Harga</label>
+            <input
+              type="range"
+              min="0"
+              max="50000"
+              step="1000"
+              onchange="applyFilters()"
+              style="width: 100%"
+            />
+            <div
+              style="
+                font-size: var(--font-size-xs);
+                color: var(--color-text-muted);
+                margin-top: var(--space-md);
+              "
+            >
+              Rp 0 - Rp 50.000/kg
+            </div>
+          </div>
+
+          <button
+            class="btn btn-outline"
+            style="width: 100%"
+            onclick="resetFilters()"
+          >
+            Reset Filter
+          </button>
+        </div>
+
+        <!-- Main Content -->
+        <div>
+          <div class="section-header">
+            <h2 style="margin: 0; font-size: var(--font-size-xl)">
+              Semua Limbah Tersedia
+            </h2>
+            <select class="sort-control" onchange="sortListings(this.value)">
+              <option value="newest">Terbaru</option>
+              <option value="price-low">Harga Terendah</option>
+              <option value="price-high">Harga Tertinggi</option>
+              <option value="expiring-soon">Akan Kadaluarsa</option>
+            </select>
+          </div>
+
+          <div class="listings-grid" id="listings-container">
+            <div class="empty-state">Memuat...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../assets/js/data.js?v=ui2"></script>
+    <script src="../assets/js/shelf-life.js?v=ui2"></script>
+    <script src="../assets/js/pricing.js?v=ui2"></script>
+    <script src="../assets/js/matching.js?v=ui2"></script>
+
+    <script>
+      let currentFarmer = null;
+      let allListings = [];
+      let filteredListings = [];
+      let currentSort = "newest";
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const currentUser = DataManager.getCurrentUser();
+        if (!currentUser || currentUser.userType !== "farmer") {
+          window.location.href = "../index.html";
+          return;
+        }
+
+        currentFarmer = DataManager.getFarmer(currentUser.userId);
+        if (!currentFarmer) {
+          window.location.href = "../index.html";
+          return;
+        }
+
+        loadMarketplace();
+      });
+
+      function loadMarketplace() {
+        allListings = DataManager.getAllListings().filter(
+          (l) => l.status === "available",
+        );
+        applyFilters();
+      }
+
+      function applyFilters() {
+        let filtered = allListings;
+
+        // Category filter
+        const selectedCategories = [];
+        ["roti", "tepung", "olahan", "sayuran"].forEach((cat) => {
+          if (document.getElementById(`filter-${cat}`).checked) {
+            const categoryMap = {
+              roti: "roti_kering",
+              tepung: "tepung_afkir",
+              olahan: "sisa_makanan_olahan",
+              sayuran: "sayuran_mentah",
+            };
+            selectedCategories.push(categoryMap[cat]);
+          }
+        });
+
+        if (selectedCategories.length > 0) {
+          filtered = filtered.filter((l) =>
+            selectedCategories.includes(l.category),
+          );
+        }
+
+        // Shelf life filter
+        const shelfLifeFilters = [];
+        if (document.getElementById("filter-fresh").checked)
+          shelfLifeFilters.push("fresh");
+        if (document.getElementById("filter-expiring").checked)
+          shelfLifeFilters.push("expiring_soon");
+
+        if (shelfLifeFilters.length > 0) {
+          filtered = filtered.filter((l) => {
+            const expiryInfo = ShelfLifeManager.getExpiryInfo(
+              l.category,
+              l.createdAt,
+            );
+            return shelfLifeFilters.includes(expiryInfo.status);
+          });
+        }
+
+        filteredListings = filtered;
+        sortAndRender();
+      }
+
+      function sortListings(sortType) {
+        currentSort = sortType;
+        sortAndRender();
+      }
+
+      function sortAndRender() {
+        let sorted = [...filteredListings];
+
+        switch (currentSort) {
+          case "price-low":
+            sorted.sort((a, b) => a.finalPrice - b.finalPrice);
+            break;
+          case "price-high":
+            sorted.sort((a, b) => b.finalPrice - a.finalPrice);
+            break;
+          case "expiring-soon":
+            sorted.sort((a, b) => {
+              const aInfo = ShelfLifeManager.getExpiryInfo(
+                a.category,
+                a.createdAt,
+              );
+              const bInfo = ShelfLifeManager.getExpiryInfo(
+                b.category,
+                b.createdAt,
+              );
+              return aInfo.remainingHours - bInfo.remainingHours;
+            });
+            break;
+          default: // newest
+            sorted.sort(
+              (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+            );
+        }
+
+        renderListings(sorted);
+      }
+
+      function renderListings(listings) {
+        const container = document.getElementById("listings-container");
+
+        if (listings.length === 0) {
+          container.innerHTML = `
+          <div class="empty-state">
+            <div style="font-size: 48px; margin-bottom: var(--space-lg);">🔍</div>
+            <p>Tidak ada limbah yang sesuai dengan filter Anda</p>
+          </div>
+        `;
+          return;
+        }
+
+        container.innerHTML = listings
+          .map((listing) => {
+            const expiryInfo = ShelfLifeManager.getExpiryInfo(
+              listing.category,
+              listing.createdAt,
+            );
+            const categoryName =
+              DataManager.WASTE_CATEGORIES[listing.category]?.name ||
+              listing.category;
+            const matchResult = MatchingEngine.calculateCompatibility(
+              listing,
+              currentFarmer,
+            );
+
+            return `
+          <div class="listing-card" onclick="viewListing('${listing.id}')">
+            <div class="listing-image waste-visual">L</div>
+            <div class="listing-body">
+              <div class="listing-name">${listing.wasteName}</div>
+              <div class="listing-category">${categoryName}</div>
+              
+              <div class="listing-details">
+                <span class="detail-badge">${listing.weight} kg</span>
+                <span class="detail-badge">${expiryInfo.status === "fresh" ? "Segar" : expiryInfo.status === "expiring_soon" ? "Segera Kadaluarsa" : "Kadaluarsa"}</span>
+              </div>
+
+              <div class="listing-price">Rp ${listing.finalPrice.toLocaleString("id-ID")}</div>
+
+              ${matchResult.score >= 85 ? '<div class="shelf-life-badge">INSTANT MATCH</div>' : ""}
+
+              <div class="listing-seller">
+                <strong>${listing.sellerName}</strong><br>
+                <span>Kompatibilitas: ${matchResult.score}%</span>
+              </div>
+            </div>
+          </div>
+        `;
+          })
+          .join("");
+      }
+
+      function resetFilters() {
+        ["roti", "tepung", "olahan", "sayuran", "fresh", "expiring"].forEach(
+          (cat) => {
+            const elem = document.getElementById(`filter-${cat}`);
+            if (elem) elem.checked = ["fresh", "expiring"].includes(cat);
+          },
+        );
+        applyFilters();
+      }
+
+      function viewListing(listingId) {
+        window.location.href = `listing-detail.html?id=${listingId}`;
+      }
+
+      function handleLogout() {
+        DataManager.logout();
+        window.location.href = "../index.html";
+      }
+    </script>
+  </body>
+</html>

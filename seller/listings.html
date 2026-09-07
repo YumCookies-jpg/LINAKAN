@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Limbah Saya - LINAKAN</title>
+    <link rel="stylesheet" href="../assets/css/variables.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/base.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/components.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/layout.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/responsive.css?v=ui2" />
+    <style>
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-2xl);
+        gap: var(--space-lg);
+      }
+
+      .section-title {
+        font-size: var(--font-size-xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-dark);
+        margin: 0;
+      }
+
+      .filter-group {
+        display: flex;
+        gap: var(--space-md);
+        flex-wrap: wrap;
+        margin-bottom: var(--space-2xl);
+      }
+
+      .filter-button {
+        padding: var(--space-md) var(--space-lg);
+        border: 1px solid var(--color-border-soft);
+        background: var(--color-white);
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        font-size: var(--font-size-sm);
+      }
+
+      .filter-button:hover {
+        border-color: var(--color-primary);
+      }
+
+      .filter-button.active {
+        background: var(--color-primary);
+        color: var(--color-white);
+        border-color: var(--color-primary);
+      }
+
+      .listings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: var(--space-2xl);
+      }
+
+      .listing-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-base);
+      }
+
+      .listing-card:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-4px);
+      }
+
+      .listing-image {
+        width: 100%;
+        height: 150px;
+        background: var(--color-light-gray);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+      }
+
+      .listing-body {
+        padding: var(--space-lg);
+      }
+
+      .listing-name {
+        font-weight: var(--font-weight-semibold);
+        font-size: var(--font-size-base);
+        margin-bottom: var(--space-sm);
+        color: var(--color-text-dark);
+      }
+
+      .listing-category {
+        font-size: var(--font-size-xs);
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-md);
+      }
+
+      .listing-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-md);
+        margin-bottom: var(--space-lg);
+        font-size: var(--font-size-sm);
+      }
+
+      .detail-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .detail-label {
+        color: var(--color-text-muted);
+        font-size: var(--font-size-xs);
+        margin-bottom: var(--space-sm);
+      }
+
+      .detail-value {
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text-dark);
+      }
+
+      .listing-status {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: var(--radius-md);
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-semibold);
+        margin-bottom: var(--space-lg);
+      }
+
+      .status-available {
+        background: rgba(0, 69, 45, 0.1);
+        color: var(--color-success);
+      }
+
+      .status-reserved {
+        background: rgba(80, 55, 0, 0.1);
+        color: var(--color-warning);
+      }
+
+      .status-completed {
+        background: rgba(0, 69, 45, 0.1);
+        color: var(--color-success);
+      }
+
+      .status-expired {
+        background: rgba(179, 38, 30, 0.1);
+        color: var(--color-error);
+      }
+
+      .listing-actions {
+        display: flex;
+        gap: var(--space-md);
+        border-top: 1px solid var(--color-border-soft);
+        padding-top: var(--space-lg);
+        margin-top: var(--space-lg);
+      }
+
+      .listing-actions button {
+        flex: 1;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: var(--space-3xl);
+        color: var(--color-text-muted);
+        background: var(--color-white);
+        border-radius: var(--radius-lg);
+        border: 1px dashed var(--color-border-soft);
+        grid-column: 1 / -1;
+      }
+
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-2xl);
+        margin-bottom: var(--space-3xl);
+      }
+
+      .stat-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-lg);
+        padding: var(--space-lg);
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: var(--font-size-2xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-primary);
+        margin-bottom: var(--space-sm);
+      }
+
+      .stat-label {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+      }
+
+      @media (max-width: 1024px) {
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .listings-grid {
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+      }
+
+      @media (max-width: 640px) {
+        .stats-row {
+          grid-template-columns: 1fr;
+        }
+
+        .listings-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .listing-actions {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div
+        class="navbar-brand"
+        onclick="window.location.href = '../index.html'"
+      >
+        <span class="brand-mark"></span> LINAKAN
+      </div>
+      <ul class="navbar-menu">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="listings.html" class="active">Limbah Saya</a></li>
+        <li><a href="transactions.html">Transaksi</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <button
+          class="btn btn-primary"
+          onclick="window.location.href = 'create-listing.html'"
+        >
+          Limbah Baru
+        </button>
+        <button class="btn btn-ghost" onclick="handleLogout()">Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-3xl mb-3xl">
+      <div class="eyebrow">Inventori penyuplai</div>
+      <h1>Limbah Saya</h1>
+      <p class="text-muted">Kelola semua limbah yang Anda posting</p>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-label">Total Limbah</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-available">0</div>
+          <div class="stat-label">Tersedia</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-reserved">0</div>
+          <div class="stat-label">Dipesan</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-weight">0 kg</div>
+          <div class="stat-label">Total Berat</div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="section-header">
+        <h2 class="section-title">Status</h2>
+      </div>
+      <div class="filter-group">
+        <button class="filter-button active" onclick="filterStatus('all')">
+          Semua
+        </button>
+        <button class="filter-button" onclick="filterStatus('available')">
+          Tersedia
+        </button>
+        <button class="filter-button" onclick="filterStatus('reserved')">
+          Dipesan
+        </button>
+        <button class="filter-button" onclick="filterStatus('completed')">
+          Selesai
+        </button>
+        <button class="filter-button" onclick="filterStatus('expired')">
+          Kadaluarsa
+        </button>
+      </div>
+
+      <!-- Listings Grid -->
+      <div class="listings-grid" id="listings-container">
+        <div class="empty-state">Memuat...</div>
+      </div>
+    </div>
+
+    <script src="../assets/js/data.js?v=ui2"></script>
+    <script src="../assets/js/shelf-life.js?v=ui2"></script>
+
+    <script>
+      let currentSeller = null;
+      let allListings = [];
+      let currentFilter = "all";
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const currentUser = DataManager.getCurrentUser();
+        if (!currentUser || currentUser.userType !== "seller") {
+          window.location.href = "../index.html";
+          return;
+        }
+
+        currentSeller = DataManager.getSeller(currentUser.userId);
+        if (!currentSeller) {
+          window.location.href = "../index.html";
+          return;
+        }
+
+        loadListings();
+      });
+
+      function loadListings() {
+        allListings = DataManager.getListingsBySeller(currentSeller.id);
+
+        // Calculate stats
+        const available = allListings.filter(
+          (l) => l.status === "available",
+        ).length;
+        const reserved = allListings.filter(
+          (l) => l.status === "reserved",
+        ).length;
+        const totalWeight = allListings.reduce((sum, l) => sum + l.weight, 0);
+
+        document.getElementById("stat-total").textContent = allListings.length;
+        document.getElementById("stat-available").textContent = available;
+        document.getElementById("stat-reserved").textContent = reserved;
+        document.getElementById("stat-weight").textContent =
+          totalWeight + " kg";
+
+        renderListings(allListings);
+      }
+
+      function renderListings(listings) {
+        const container = document.getElementById("listings-container");
+
+        if (listings.length === 0) {
+          container.innerHTML = `
+          <div class="empty-state">
+            <div class="waste-visual" style="height: 120px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-weight: var(--font-weight-bold); margin-bottom: var(--space-lg);">LINAKAN</div>
+            <p>Belum ada limbah yang diposting</p>
+            <button class="btn btn-primary" style="margin-top: var(--space-lg);" onclick="window.location.href='create-listing.html'">
+              Posting Limbah Pertama
+            </button>
+          </div>
+        `;
+          return;
+        }
+
+        container.innerHTML = listings
+          .map((listing) => {
+            const category =
+              DataManager.WASTE_CATEGORIES[listing.category]?.name ||
+              listing.category;
+            const expiryInfo = ShelfLifeManager.getExpiryInfo(
+              listing.category,
+              listing.createdAt,
+            );
+            const statusClass = `status-${listing.status}`;
+
+            return `
+          <div class="listing-card">
+            <div class="listing-image waste-visual">L</div>
+            <div class="listing-body">
+              <div class="listing-name">${listing.wasteName}</div>
+              <div class="listing-category">${category}</div>
+
+              <span class="listing-status ${statusClass}">
+                ${listing.status.charAt(0).toUpperCase() + listing.status.slice(1)}
+              </span>
+
+              <div class="listing-details">
+                <div class="detail-item">
+                  <span class="detail-label">Berat</span>
+                  <span class="detail-value">${listing.weight} kg</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Harga/kg</span>
+                  <span class="detail-value">Rp ${listing.pricePerKg.toLocaleString("id-ID")}</span>
+                </div>
+              </div>
+
+              <div class="detail-item" style="margin-bottom: var(--space-lg);">
+                <span class="detail-label">Masa Berlaku</span>
+                <span class="detail-value">${expiryInfo.message}</span>
+              </div>
+
+              <div class="listing-actions">
+                <button class="btn btn-sm btn-outline" onclick="viewListing('${listing.id}')">
+                  Lihat
+                </button>
+                ${
+                  listing.status === "available"
+                    ? `
+                  <button class="btn btn-sm btn-outline" onclick="editListing('${listing.id}')">
+                    Edit
+                  </button>
+                  <button class="btn btn-sm btn-danger" onclick="deleteListing('${listing.id}')">
+                    Hapus
+                  </button>
+                `
+                    : ""
+                }
+              </div>
+            </div>
+          </div>
+        `;
+          })
+          .join("");
+      }
+
+      function filterStatus(status) {
+        currentFilter = status;
+
+        // Update active button
+        document
+          .querySelectorAll(".filter-button")
+          .forEach((btn) => btn.classList.remove("active"));
+        event.target.classList.add("active");
+
+        // Filter and render
+        let filtered = allListings;
+        if (status !== "all") {
+          filtered = allListings.filter((l) => l.status === status);
+        }
+
+        renderListings(filtered);
+      }
+
+      function viewListing(listingId) {
+        alert("Detail listing view - This would show full listing details");
+      }
+
+      function editListing(listingId) {
+        window.location.href = `create-listing.html?id=${listingId}`;
+      }
+
+      function deleteListing(listingId) {
+        if (confirm("Yakin ingin menghapus limbah ini?")) {
+          DataManager.deleteListing(listingId);
+          alert("Limbah berhasil dihapus");
+          loadListings();
+        }
+      }
+
+      function handleLogout() {
+        DataManager.logout();
+        window.location.href = "../index.html";
+      }
+    </script>
+  </body>
+</html>

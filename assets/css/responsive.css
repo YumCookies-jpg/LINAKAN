@@ -1,0 +1,412 @@
+/* LINAKAN Responsive Styles */
+
+@import url("variables.css");
+
+/* ============================================
+   MOBILE (Up to 640px)
+   ============================================ */
+
+@media (max-width: 640px) {
+  :root {
+    font-size: 14px;
+  }
+
+  /* Navbar */
+  .navbar {
+    padding: var(--space-md) var(--space-lg);
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .navbar-menu {
+    gap: var(--space-sm);
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    padding-bottom: var(--space-xs);
+  }
+
+  .navbar-actions {
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .navbar-menu a {
+    white-space: nowrap;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    display: none;
+    position: fixed;
+    left: -250px;
+    top: 0;
+    width: 250px;
+    height: 100vh;
+    z-index: var(--z-fixed);
+    transition: left var(--transition-base);
+  }
+
+  .sidebar.active {
+    display: block;
+    left: 0;
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Layout */
+  .layout-main-content {
+    flex-direction: column;
+  }
+
+  .layout-main-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+
+  .layout-main-body {
+    padding: var(--space-lg);
+  }
+
+  /* Container */
+  .container,
+  .container-lg,
+  .container-sm {
+    padding: 0 var(--space-lg);
+  }
+
+  /* Grid */
+  .grid-2,
+  .grid-3,
+  .grid-4,
+  .grid-auto {
+    grid-template-columns: 1fr;
+  }
+
+  .col-12,
+  .col-6,
+  .col-4,
+  .col-3 {
+    flex: 0 0 100%;
+  }
+
+  /* Row */
+  .row {
+    gap: var(--space-lg);
+    flex-direction: column;
+  }
+
+  .row.reverse {
+    flex-direction: column-reverse;
+  }
+
+  /* Buttons */
+  .btn-block {
+    width: 100%;
+  }
+
+  .btn-lg {
+    padding: var(--space-lg) var(--space-xl);
+  }
+
+  /* Cards */
+  .card {
+    padding: var(--space-lg);
+  }
+
+  .card-compact {
+    padding: var(--space-md);
+  }
+
+  /* Modal */
+  .modal-content {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: var(--space-lg);
+  }
+
+  /* Forms */
+  .form-input,
+  .form-select,
+  .form-textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+
+  /* Section */
+  .section {
+    padding: var(--space-2xl) 0;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .section-title {
+    font-size: var(--font-size-xl);
+  }
+
+  /* Tables */
+  table {
+    font-size: var(--font-size-sm);
+  }
+
+  th,
+  td {
+    padding: var(--space-md);
+  }
+
+  /* Hero */
+  .hero {
+    padding: var(--space-2xl) var(--space-lg);
+  }
+
+  .hero-product {
+    min-height: 76vh;
+    padding: var(--space-4xl) var(--space-lg) var(--space-3xl);
+    align-items: flex-start;
+    background-position: 60% center;
+  }
+
+  .hero-actions,
+  .action-row {
+    align-items: stretch;
+  }
+
+  .hero-actions .btn,
+  .action-row .btn {
+    width: 100%;
+  }
+
+  .story-band {
+    margin-top: 0;
+  }
+
+  .story-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .hero-subtitle {
+    font-size: var(--font-size-base);
+  }
+
+  /* Spacing Utilities */
+  .mb-3xl {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .p-3xl {
+    padding: var(--space-2xl);
+  }
+
+  .m-3xl {
+    margin: var(--space-2xl);
+  }
+
+  /* Tabs */
+  .tabs {
+    gap: var(--space-md);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab {
+    padding: var(--space-md) var(--space-lg);
+    flex: none;
+    white-space: nowrap;
+  }
+}
+
+/* ============================================
+   TABLET (641px to 1024px)
+   ============================================ */
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  :root {
+    font-size: 15px;
+  }
+
+  /* Grid */
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-auto {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 200px;
+  }
+
+  /* Layout */
+  .layout-main-sidebar {
+    width: 200px;
+  }
+
+  /* Container */
+  .container-lg {
+    padding: 0 var(--space-xl);
+  }
+
+  /* Navbar */
+  .navbar {
+    padding: var(--space-lg) var(--space-xl);
+  }
+}
+
+/* ============================================
+   LARGE DESKTOP (1400px+)
+   ============================================ */
+
+@media (min-width: 1400px) {
+  .container-lg {
+    max-width: 1600px;
+  }
+
+  .grid-auto {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+/* ============================================
+   LANDSCAPE ORIENTATION (Mobile)
+   ============================================ */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .navbar {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .navbar-menu {
+    gap: var(--space-md);
+  }
+
+  .layout-main-body {
+    padding: var(--space-md);
+  }
+
+  .section {
+    padding: var(--space-lg) 0;
+  }
+
+  .card {
+    padding: var(--space-md);
+  }
+
+  .btn {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* ============================================
+   HIGH DENSITY DISPLAYS
+   ============================================ */
+
+@media (min-resolution: 2dppx) {
+  img {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  body {
+    background-color: var(--color-white);
+  }
+
+  .navbar,
+  .sidebar,
+  .navbar-actions,
+  .no-print {
+    display: none;
+  }
+
+  .card,
+  .panel {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 1px solid #ccc;
+  }
+
+  button {
+    border: 1px solid #ccc;
+  }
+}
+
+/* ============================================
+   PREFERS REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   TOUCH DEVICES
+   ============================================ */
+
+@media (hover: none) and (pointer: coarse) {
+  .btn:hover {
+    box-shadow: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+
+  .tab:hover {
+    background-color: transparent;
+  }
+
+  /* Increase touch target size */
+  .btn,
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}

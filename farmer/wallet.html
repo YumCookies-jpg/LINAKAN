@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dompet Peternak - LINAKAN</title>
+    <link rel="stylesheet" href="../assets/css/variables.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/base.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/components.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/layout.css?v=ui2" />
+    <link rel="stylesheet" href="../assets/css/responsive.css?v=ui2" />
+    <style>
+      .wallet-header {
+        background: linear-gradient(
+          135deg,
+          var(--color-primary) 0%,
+          var(--color-primary-light) 100%
+        );
+        color: var(--color-white);
+        padding: var(--space-3xl) var(--space-2xl);
+        margin: calc(-var(--space-3xl)) calc(-var(--space-2xl)) var(--space-3xl);
+        border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      }
+
+      .balance-card {
+        background: var(--color-white);
+        border-radius: var(--radius-lg);
+        padding: var(--space-2xl);
+        margin-top: calc(-80px);
+        position: relative;
+        box-shadow: var(--shadow-lg);
+        margin-bottom: var(--space-3xl);
+      }
+
+      .balance-value {
+        font-size: var(--font-size-3xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-primary);
+        margin-bottom: var(--space-sm);
+      }
+
+      .balance-label {
+        color: var(--color-text-muted);
+        font-size: var(--font-size-sm);
+        margin-bottom: var(--space-2xl);
+      }
+
+      .action-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-lg);
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-2xl);
+      }
+
+      .section-title {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-dark);
+      }
+
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-2xl);
+        margin-bottom: var(--space-3xl);
+      }
+
+      .stat-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-lg);
+        padding: var(--space-lg);
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: var(--font-size-2xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-primary);
+        margin-bottom: var(--space-sm);
+      }
+
+      .stat-label {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+      }
+
+      .transaction-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--space-lg);
+        border-bottom: 1px solid var(--color-border-soft);
+      }
+
+      .transaction-item:last-child {
+        border-bottom: none;
+      }
+
+      .transaction-info {
+        flex: 1;
+      }
+
+      .transaction-type {
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text-dark);
+        margin-bottom: var(--space-sm);
+      }
+
+      .transaction-date {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+      }
+
+      .transaction-amount {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-bold);
+        text-align: right;
+      }
+
+      .amount-debit {
+        color: var(--color-error);
+      }
+
+      .amount-credit {
+        color: var(--color-success);
+      }
+
+      .table-container {
+        background: var(--color-white);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-lg);
+        overflow-x: auto;
+      }
+
+      .topup-modal {
+        display: none;
+      }
+
+      @media (max-width: 1024px) {
+        .stats-row {
+          grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div
+        class="navbar-brand"
+        onclick="window.location.href = '../index.html'"
+      >
+        <span class="brand-mark"></span> LINAKAN
+      </div>
+      <ul class="navbar-menu">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="transactions.html">Transaksi</a></li>
+        <li><a href="wallet.html" class="active">Dompet</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <button class="btn btn-ghost" onclick="handleLogout()">Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-3xl mb-3xl">
+      <!-- Header -->
+      <div class="wallet-header">
+        <h1
+          style="margin: 0 0 var(--space-md) 0; font-size: var(--font-size-2xl)"
+        >
+          Dompet Digital
+        </h1>
+        <p style="margin: 0; opacity: 0.95">Kelola saldo dan transaksi Anda</p>
+      </div>
+
+      <!-- Balance Card -->
+      <div class="balance-card">
+        <div class="balance-label">SALDO ANDA</div>
+        <div class="balance-value" id="total-balance">Rp 0</div>
+
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="openTopUpModal()">
+            Top Up Saldo
+          </button>
+          <button class="btn btn-outline" onclick="requestWithdrawal()">
+            Ajukan Penarikan
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-spent">Rp 0</div>
+          <div class="stat-label">Total Pengeluaran</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-transactions">0</div>
+          <div class="stat-label">Jumlah Transaksi</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-average">Rp 0</div>
+          <div class="stat-label">Rata-rata per Transaksi</div>
+        </div>
+      </div>
+
+      <!-- Transactions -->
+      <div>
+        <div class="section-header">
+          <h2 class="section-title">Riwayat Transaksi</h2>
+          <select
+            onchange="filterTransactions(this.value)"
+            style="
+              padding: var(--space-md) var(--space-lg);
+              border: 1px solid var(--color-border-soft);
+              border-radius: var(--radius-md);
+            "
+          >
+            <option value="">Semua</option>
+            <option value="top_up">Top Up</option>
+            <option value="payment">Pembayaran</option>
+            <option value="withdrawal">Penarikan</option>
+          </select>
+        </div>
+
+        <div class="table-container">
+          <div id="transactions-list">
+            <!-- Transactions will be rendered here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Up Modal -->
+    <div class="modal" id="topup-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Top Up Saldo</h2>
+          <button type="button" class="modal-close" onclick="closeTopUpModal()">
+            ×
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="topup-amount">Jumlah (Rp)</label>
+            <input
+              type="number"
+              id="topup-amount"
+              placeholder="Masukkan jumlah"
+              min="10000"
+              step="10000"
+              value="100000"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="payment-method">Metode Pembayaran</label>
+            <select id="payment-method">
+              <option value="bank_transfer">Transfer Bank</option>
+              <option value="credit_card">Kartu Kredit</option>
+              <option value="e_wallet">E-Wallet</option>
+            </select>
+          </div>
+
+          <div class="alert alert-info">
+            Ini simulasi top up frontend. Tidak ada pembayaran nyata atau
+            integrasi payment gateway.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-ghost"
+            onclick="closeTopUpModal()"
+          >
+            Batal
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            onclick="processTopUp()"
+          >
+            Lanjutkan Top Up
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../assets/js/data.js?v=ui2"></script>
+    <script src="../assets/js/wallet.js?v=ui2"></script>
+    <script src="../assets/js/pricing.js?v=ui2"></script>
+
+    <script>
+      let currentFarmer = null;
+      let allTransactions = [];
+      let filteredTransactions = [];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const currentUser = DataManager.getCurrentUser();
+        if (!currentUser || currentUser.userType !== "farmer") {
+          window.location.href = "../index.html";
+          return;
+        }
+
+        currentFarmer = DataManager.getFarmer(currentUser.userId);
+        if (!currentFarmer) {
+          window.location.href = "../index.html";
+          return;
+        }
+
+        loadWalletData();
+      });
+
+      function loadWalletData() {
+        // Get wallet info
+        const balance = WalletManager.getBalance(currentFarmer.id);
+        const summary = WalletManager.getFarmerWalletSummary(currentFarmer.id);
+        allTransactions = WalletManager.getTransactionHistory(
+          currentFarmer.id,
+          50,
+        );
+
+        document.getElementById("total-balance").textContent =
+          balance.formattedBalance;
+        document.getElementById("stat-spent").textContent =
+          `Rp ${summary.totalSpent.toLocaleString("id-ID")}`;
+        document.getElementById("stat-transactions").textContent =
+          summary.totalTransactions;
+        document.getElementById("stat-average").textContent =
+          summary.totalTransactions > 0
+            ? `Rp ${summary.averageSpendPerTransaction.toLocaleString("id-ID")}`
+            : "Rp 0";
+
+        renderTransactions(allTransactions);
+      }
+
+      function renderTransactions(transactions) {
+        filteredTransactions = transactions;
+        const container = document.getElementById("transactions-list");
+
+        if (transactions.length === 0) {
+          container.innerHTML = `
+          <div style="padding: var(--space-3xl); text-align: center; color: var(--color-text-muted);">
+            <div style="font-size: 48px; margin-bottom: var(--space-lg);">📋</div>
+            <p>Belum ada riwayat transaksi</p>
+          </div>
+        `;
+          return;
+        }
+
+        container.innerHTML = transactions
+          .map((txn) => {
+            const date = new Date(txn.date).toLocaleDateString("id-ID");
+            const time = new Date(txn.date).toLocaleTimeString("id-ID", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            const isCredit = txn.type === "top_up";
+            const amount = `${isCredit ? "+" : "-"} Rp ${Math.abs(txn.amount).toLocaleString("id-ID")}`;
+
+            return `
+          <div class="transaction-item">
+            <div class="transaction-info">
+              <div class="transaction-type">${getTransactionLabel(txn.type)}</div>
+              <div class="transaction-date">${date} ${time}</div>
+            </div>
+            <div class="transaction-amount ${isCredit ? "amount-credit" : "amount-debit"}">
+              ${amount}
+            </div>
+          </div>
+        `;
+          })
+          .join("");
+      }
+
+      function getTransactionLabel(type) {
+        const labels = {
+          top_up: "Top Up Saldo",
+          payment: "Pembayaran Limbah",
+          earning: "Penerimaan",
+          fee: "Biaya Layanan",
+          withdrawal: "Penarikan Dana",
+        };
+        return labels[type] || type;
+      }
+
+      function openTopUpModal() {
+        document.getElementById("topup-modal").classList.add("active");
+      }
+
+      function closeTopUpModal() {
+        document.getElementById("topup-modal").classList.remove("active");
+        document.getElementById("topup-amount").value = "100000";
+      }
+
+      function processTopUp() {
+        const amount = parseInt(document.getElementById("topup-amount").value);
+        const method = document.getElementById("payment-method").value;
+
+        if (!amount || amount < 10000) {
+          alert("Jumlah minimal adalah Rp 10.000");
+          return;
+        }
+
+        // Process top up
+        const result = WalletManager.topUpWallet(
+          currentFarmer.id,
+          amount,
+          method,
+        );
+
+        if (result) {
+          alert(
+            `Top up simulasi sebesar Rp ${amount.toLocaleString("id-ID")} berhasil.`,
+          );
+          closeTopUpModal();
+          loadWalletData();
+        } else {
+          alert("Gagal memproses top up. Silakan coba lagi.");
+        }
+      }
+
+      function filterTransactions(type) {
+        if (!type) {
+          renderTransactions(allTransactions);
+        } else {
+          const filtered = allTransactions.filter((txn) => txn.type === type);
+          renderTransactions(filtered);
+        }
+      }
+
+      function requestWithdrawal() {
+        const balance = WalletManager.getBalance(currentFarmer.id).balance;
+
+        if (balance < 50000) {
+          alert("Saldo minimum untuk penarikan adalah Rp 50.000");
+          return;
+        }
+
+        const amount = prompt(
+          "Masukkan jumlah yang ingin ditarik:",
+          balance.toString(),
+        );
+        if (!amount) return;
+
+        const numAmount = parseInt(amount);
+        if (numAmount < 50000) {
+          alert("Jumlah penarikan minimal Rp 50.000");
+          return;
+        }
+
+        if (numAmount > balance) {
+          alert("Saldo tidak cukup");
+          return;
+        }
+
+        const bankAccount = prompt("Masukkan nomor rekening bank:");
+        if (!bankAccount) return;
+
+        // Process withdrawal
+        WalletManager.requestWithdrawal(
+          currentFarmer.id,
+          numAmount,
+          bankAccount,
+        );
+        alert(
+          `Permintaan penarikan simulasi sebesar Rp ${numAmount.toLocaleString("id-ID")} telah diajukan.`,
+        );
+        loadWalletData();
+      }
+
+      function handleLogout() {
+        DataManager.logout();
+        window.location.href = "../index.html";
+      }
+    </script>
+  </body>
+</html>
